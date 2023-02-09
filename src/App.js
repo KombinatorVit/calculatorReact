@@ -1,23 +1,37 @@
-import {Box, Button, Text} from '@chakra-ui/react'
+import {Box, Button, Text, Input, Flex} from '@chakra-ui/react'
 import './App.css';
 import {useState} from "react";
+import {Numbers} from "./components/Numbers";
 
 
-function Numbers(props) {
-    const nums = Array.from(Array(10).keys()).map(
-        number => {
-            return <Button
-                onClick={(e) => {
-                    if (props.data != '0') props.onClick(props.data + e.target.innerHTML)
-                    else props.onClick(e.target.innerHTML)
+function InputCalc(props) {
+    const [result, setResult] = useState('')
+    const [counts, setCounts] = useState('')
 
 
-                }}
-                key={number} w={'40px'} h={'40px'} margin={'4px'}> {number}</Button>
-        })
+    function updateCount(e) {
+        const expressions = /\+|\-|\/|\*|=|[A-z]| /
+        const lastNumber = e.target.value[e.target.value.length - 2]
+        if (expressions.test(lastNumber) && expressions.test(e.nativeEvent.data) && e.nativeEvent.data != null) return
+        if (!expressions.test(e.nativeEvent.data)) setResult(eval(e.target.value))
+        setCounts(e.target.value)
 
-    return <Box display={'flex'} flexWrap={'wrap'} w={'150px'}> {nums}</Box>
+    }
+
+    return (
+        <Flex w={'100%'} justifyContent={'center'}>
+            <Flex justifyContent={'center'} alignItems={'center'} border={'2px'} borderRadius={'8px'}
+                  borderColor={'gray.50'}>
+                <Input border={'transparent'} type="text" onInput={(e) => {
+                    updateCount(e)}} value={counts}/>
+                <Text textColor={'tomato'} px={'4px'}>{result} </Text>
+            </Flex>
+        </Flex>
+
+    )
+
 }
+
 
 function App() {
 
@@ -31,44 +45,50 @@ function App() {
 
     return (
 
-        <div className="App">
+
+<div className={'App'}>
+
+    <Flex display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} h={'100vh'}>
+        <Flex gap={'5px'} flexDirection={'column'} justifyContent={'center'}
+              alignItems={'center'} w={'200px'}>
+            <InputCalc />
+
+            <Flex  w={'100%'} justifyContent='space-between' alignItems={'center'} bg={'gray.50'} borderRadius={'8px'} >
 
 
-            <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} h={'100vh'}>
-                <Box display={'flex'} gap={'5px'} flexDirection={'column'} justifyContent={'center'}
-                     alignItems={'center'} w={'200vh'}>
-                    <Box display={'flex'} w={'30%'} justifyContent='center'>
+                <Text display={'flex'} justifyContent='start' alignItems={'center'}
+                      w="fit-content"
+                      h={'38px'} px={'16px'} >
+                    {counts}
+                </Text>
 
 
-                        <Text display={'flex'} justifyContent='space-between' alignItems={'center'} bg='gray.50'
-                              w={'50%'}
-                              h={'38px'} px={'4px'} borderRadius={'8px'}>
-                            {counts}
-                        </Text>
-                        <Text w="fit-content" h={'38px'} textColor='tomato'>
-                            {result}
-                        </Text>
-                    </Box>
+                <Text display={'flex'} justifyContent='start' alignItems={'center'}
+                      w="fit-content" h={'38px'} textColor='tomato' px={'16px'}>
+                    {result}
+                </Text>
+            </Flex>
 
-                    <Box display='flex'>
-                        <Numbers data={counts} onClick={setCounts}/>
-                        <Box display='flex' flexDirection='column'>
+            <Flex>
+                <Numbers data={counts} onClick={setCounts}/>
+                <Flex  flexDirection='column'>
 
-                            <CountButton data={counts} expression={'+'} onClick={applyExpression}/>
-                            <CountButton data={counts} expression={'-'} onClick={applyExpression}/>
-                            <CountButton data={counts} expression={'/'} onClick={applyExpression}/>
-                            <CountButton data={counts} expression={'*'} onClick={applyExpression}/>
-                            <Button bg={'tomato'} m={'4px'} onClick={() => {
-                                setResult(eval(counts))
-                            }}
-                            > =</Button>
-                        </Box>
-                    </Box>
-                </Box>
-            </Box>
+                    <CountButton data={counts} expression={'+'} onClick={applyExpression}/>
+                    <CountButton data={counts} expression={'-'} onClick={applyExpression}/>
+                    <CountButton data={counts} expression={'/'} onClick={applyExpression}/>
+                    <CountButton data={counts} expression={'*'} onClick={applyExpression}/>
+                </Flex>
+
+                <Button bg={'tomato'} m={'4px'} onClick={() => {
+                    setResult(eval(counts))
+                }}
+                > =</Button>
+            </Flex>
+        </Flex>
+    </Flex>
+</div>
 
 
-        </div>
     );
 }
 
