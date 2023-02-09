@@ -16,11 +16,11 @@ export function InputCalc() {
     }
 
     return (
-        <Flex w={'100%'} justifyContent={'center'}>
+        <Flex display={'flex'} w={'100%'} justifyContent={'center'}  alignItems={'center'} marginTop={'200px'} >
             <Flex justifyContent={'center'} alignItems={'center'} border={'2px'} borderRadius={'8px'}
                   borderColor={'gray.50'}>
-                <Input border={'transparent'} type="text" onInput={(e) => {
-                    updateCount(e)}} value={counts}/>
+                <Input placeholder={'Введите циферку'} border={'transparent'} type="text" onInput={(e) => {
+                    updateCount(e)}} value={counts} />
                 <Text textColor={'tomato'} px={'4px'}>{result} </Text>
             </Flex>
         </Flex>
