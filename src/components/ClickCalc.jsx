@@ -81,6 +81,8 @@ const ClickCalc = (props) => {
                     <Button bg={'tomato'} m={'4px'} onClick={() => {
                     setResult(eval(counts))
                         setCounts('0')
+                        props.onClick(counts)
+
                 }}
                     > =</Button>
             </Flex>

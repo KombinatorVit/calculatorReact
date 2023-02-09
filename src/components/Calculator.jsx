@@ -4,18 +4,39 @@ import ClickCalc from "./ClickCalc";
 import {InputCalc} from "./InputCalc";
 
 
+function History(props) {
+    const results = props.data.map(result => {
+        return <Button key={result}>{result}</Button>
+    })
+    return (
+        <Box>
+            {results}
+        </Box>
+    )
+}
+
+
 const Calculator = () => {
+
+    const [history, setHistory] = useState([])
     const [calcType, setCalcType] = useState('ClickCalc')
+
+    function updateHistory(calcResult) {
+        if (history.length > 6) {history.shift()}
+        setHistory(history.concat(eval(calcResult)))
+    }
+
+
     let calculator;
     switch (calcType) {
         case 'ClickCalc':
-            calculator = <ClickCalc/>
+            calculator = <ClickCalc onClick={updateHistory} />
             break;
         case 'InputCalc':
-            calculator = <InputCalc/>
+            calculator = <InputCalc onKeyDown={updateHistory}/>
             break;
         default:
-            calculator = <ClickCalc/>
+            calculator = <ClickCalc onClick={updateHistory} />
 
     }
 
@@ -31,6 +52,7 @@ const Calculator = () => {
         </Button>
 
         <Box m={'10px'}>
+            <History data={history}/>
             {calculator}
 
         </Box>

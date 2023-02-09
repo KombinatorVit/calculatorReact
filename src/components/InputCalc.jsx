@@ -2,7 +2,7 @@ import {Flex, Input, Text} from "@chakra-ui/react";
 import { useState, useEffect } from 'react'
 
 
-export function InputCalc() {
+export function InputCalc(props) {
     const [result, setResult] = useState('')
     const [counts, setCounts] = useState('')
     useEffect(() => { document.querySelector("input").focus() })
@@ -16,12 +16,21 @@ export function InputCalc() {
         setCounts(e.target.value)
 
     }
+    function sendDataToHistory(e) {
+        if (e.nativeEvent.key == "Enter") {
+            props.onKeyDown(counts)
+            setCounts('')
+
+        }
+
+    }
+
 
     return (
         <Flex display={'flex'} w={'100%'} justifyContent={'center'}  alignItems={'center'} marginTop={'200px'} >
             <Flex justifyContent={'center'} alignItems={'center'} border={'2px'} borderRadius={'8px'}
                   borderColor={'gray.50'}>
-                <Input placeholder={'Введите циферку'} border={'transparent'} type="text" onInput={(e) => {
+                <Input placeholder={'Введите циферку'} border={'transparent'} type="text" onKeyDown={(e) => {sendDataToHistory(e)}} onChange={(e) => {
                     updateCount(e)}} value={counts} />
                 <Text textColor={'tomato'} px={'4px'}>{result} </Text>
             </Flex>
