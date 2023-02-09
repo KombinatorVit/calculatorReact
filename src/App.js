@@ -1,7 +1,18 @@
 import './App.css';
+import { HamburgerIcon } from '@chakra-ui/icons'
 
 import Calculator from "./components/Calculator";
+import {Box} from "@chakra-ui/react";
 
+
+
+function Menu(){
+    return (
+        <Box>
+
+        </Box>
+    )
+}
 
 function App() {
 
@@ -9,10 +20,11 @@ function App() {
 
     return (
 
-<div className={'App'}>
+<Box h={'90vh'}>
+    <HamburgerIcon w={'45px'} h={'45px'} p={'5px'} m={'5px'} borderRadius={'5px'} />
     <Calculator />
 
-</div>
+</Box>
 
 
 
