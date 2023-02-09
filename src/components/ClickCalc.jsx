@@ -2,7 +2,7 @@ import {Box, Button, Flex, Text} from "@chakra-ui/react";
 import {useState} from "react";
 
 export function Numbers(props) {
-    const nums = Array.from(Array(10).keys()).map(
+ const nums = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', ','].map(
         number => {
             return <Button
                 onClick={(e) => {
@@ -11,7 +11,7 @@ export function Numbers(props) {
 
 
                 }}
-                key={number} w={'40px'} h={'40px'} margin={'4px'}> {number}</Button>
+                key={number} w={'60px'} h={'60px'} margin={'4px'}> {number}</Button>
         })
 
     return <Box display={'flex'} flexWrap={'wrap'} w={'150px'}> {nums}</Box>
@@ -50,23 +50,23 @@ const ClickCalc = (props) => {
         setResult(eval(counts))
     }
     return (
-        <Flex display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} h={'100vh'}>
+        <Flex display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}  >
             <Flex gap={'5px'} flexDirection={'column'} justifyContent={'center'}
-                  alignItems={'center'} w={'200px'}>
+                  alignItems={'center'} >
 
-                <Flex w={'100%'} justifyContent='space-between' alignItems={'center'} bg={'gray.50'}
+                <Flex w={'90%'} justifyContent='space-between' alignItems={'center'} bg={'gray.50'}
                       borderRadius={'8px'}>
 
 
                     <Text display={'flex'} justifyContent='start' alignItems={'center'}
                           w="fit-content"
-                          h={'38px'} px={'16px'}>
+                         px={'16px'}>
                         {counts}
                     </Text>
 
 
                     <Text display={'flex'} justifyContent='start' alignItems={'center'}
-                          w="fit-content" h={'38px'} textColor='tomato' px={'16px'}>
+                          w="fit-content"  textColor='tomato' px={'16px'}>
                         {result}
                     </Text>
                 </Flex>
@@ -80,6 +80,7 @@ const ClickCalc = (props) => {
                     </Flex>
                     <Button bg={'tomato'} m={'4px'} onClick={() => {
                     setResult(eval(counts))
+                        setCounts('0')
                 }}
                     > =</Button>
             </Flex>

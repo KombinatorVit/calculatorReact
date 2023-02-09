@@ -1,9 +1,11 @@
-import {useState} from "react";
 import {Flex, Input, Text} from "@chakra-ui/react";
+import { useState, useEffect } from 'react'
+
 
 export function InputCalc() {
     const [result, setResult] = useState('')
     const [counts, setCounts] = useState('')
+    useEffect(() => { document.querySelector("input").focus() })
 
 
     function updateCount(e) {
