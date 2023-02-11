@@ -5,11 +5,11 @@ import {InputCalc} from "./InputCalc";
 
 
 function History(props) {
-    const results = props.data.map(result => {
-        return <Button key={result}>{result}</Button>
+    const results = props.data.map((result, index) => {
+        return <Button className = 'draggable' key={index}>{result}</Button>
     })
     return (
-        <Box>
+        <Box display={'flex'} h={'30px'} m={'20px'} gap={'10px'}>
             {results}
         </Box>
     )

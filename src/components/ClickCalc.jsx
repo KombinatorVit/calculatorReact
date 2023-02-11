@@ -1,8 +1,9 @@
 import {Box, Button, Flex, Text} from "@chakra-ui/react";
 import {useState} from "react";
+import Dragging from "./Dragging";
 
 export function Numbers(props) {
- const nums = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', ','].map(
+    const nums = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', ','].map(
         number => {
             return <Button
                 onClick={(e) => {
@@ -29,7 +30,7 @@ function CountButton(props) {
     }
 
     return (
-        <Button onClick={() => {
+        <Button className="droppable" bg={'capri'} m={'4px'} w={'60px'} h={'60px'} onClick={() => {
             checkExpressionType()
         }}>
 
@@ -37,7 +38,6 @@ function CountButton(props) {
         </Button>
     )
 }
-
 
 
 const ClickCalc = (props) => {
@@ -49,45 +49,43 @@ const ClickCalc = (props) => {
         setCounts(countedNumber)
         setResult(eval(counts))
     }
+
     return (
-        <Flex display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}  >
-            <Flex gap={'5px'} flexDirection={'column'} justifyContent={'center'}
-                  alignItems={'center'} >
-
-                <Flex w={'90%'} justifyContent='space-between' alignItems={'center'} bg={'gray.50'}
-                      borderRadius={'8px'}>
+        <Dragging result={result} setResult={setResult} setHistory={props.onClick}>
 
 
-                    <Text display={'flex'} justifyContent='start' alignItems={'center'}
-                          w="fit-content"
-                         px={'16px'}>
-                        {counts}
-                    </Text>
+            <Flex w={'90%'} justifyContent='space-between' alignItems={'center'} bg={'gray.50'}
+                  borderRadius={'8px'}>
 
 
-                    <Text display={'flex'} justifyContent='start' alignItems={'center'}
-                          w="fit-content"  textColor='tomato' px={'16px'}>
-                        {result}
-                    </Text>
+                <Text display={'flex'} justifyContent='start' alignItems={'center'}
+                      w="fit-content" px={'16px'} h={'40px'}>
+                    {counts}
+                </Text>
+
+                <Text display={'flex'} justifyContent='start' alignItems={'center'}
+                      w="fit-content" textColor='tomato' px={'16px'} h={'40px'}>
+                    {result}
+                </Text>
+            </Flex>
+            <Flex w={'90%'}>
+                <Numbers data={counts} onClick={setCounts}/>
+                <Flex flexDirection='column'>
+                    <CountButton data={counts} expression={'+'} onClick={applyExpression}/>
+                    <CountButton data={counts} expression={'-'} onClick={applyExpression}/>
+                    <CountButton data={counts} expression={'*'} onClick={applyExpression}/>
+                    <CountButton data={counts} expression={'/'} onClick={applyExpression}/>
                 </Flex>
-                <Flex>
-                    <Numbers data={counts} onClick={setCounts}/>
-                    <Flex  flexDirection='column'>
-                        <CountButton data={counts} expression={'+'} onClick={applyExpression}/>
-                        <CountButton data={counts} expression={'-'} onClick={applyExpression}/>
-                        <CountButton data={counts} expression={'/'} onClick={applyExpression}/>
-                        <CountButton data={counts} expression={'*'} onClick={applyExpression}/>
-                    </Flex>
-                    <Button bg={'tomato'} m={'4px'} onClick={() => {
+                <Button bg={'tomato'} m={'4px'} w={'60px'} h={'60px'} onClick={() => {
                     setResult(eval(counts))
-                        setCounts('0')
-                        props.onClick(counts)
+                    setCounts('0')
+                    props.onClick(counts)
 
                 }}
-                    > =</Button>
+                > =</Button>
             </Flex>
-            </Flex>
-        </Flex>
+
+        </Dragging>
     );
 };
 
