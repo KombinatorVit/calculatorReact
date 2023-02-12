@@ -1,37 +1,68 @@
-import {Box, Button, Flex, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, Grid, GridItem, Text} from "@chakra-ui/react";
 import {useState} from "react";
 import Dragging from "./Dragging";
+import {useDispatch} from "react-redux";
+import {updateHistory} from "../historySlice";
+
+
+function MemoryZone(props) {
+    const results = props.memory.map((result, index) => {
+        return (
+            <Button
+                className={'draggable'}
+                key={index}>
+                {result}
+            </Button>
+        )
+    })
+    return (
+        <Flex display={'flex'} h={'20px'} m={'20px'} gap={'10px'} className={'droppable memory'}>
+            {results}
+        </Flex>
+    )
+}
 
 export function Numbers(props) {
-    const nums = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', ','].map(
+
+    const passTheNumber = (e) => {
+        if (props.data != '0') props.onClick(props.data + e.target.innerHTML)
+        else props.onClick(e.target.innerHTML)
+    }
+
+    const nums = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', ',', '😺'].map(
         number => {
-            return <Button
-                onClick={(e) => {
-                    if (props.data != '0') props.onClick(props.data + e.target.innerHTML)
-                    else props.onClick(e.target.innerHTML)
-
-
-                }}
-                key={number} w={'60px'} h={'60px'} margin={'4px'}> {number}</Button>
+            return (
+                <GridItem key={number}>
+                    <Button size={'xl'}
+                            onClick={(e) => {
+                                passTheNumber(e)
+                            }}> {number}</Button>
+                </GridItem>
+            )
         })
 
-    return <Box display={'flex'} flexWrap={'wrap'} w={'150px'}> {nums}</Box>
+    return <Grid templateColumns={'repeat(3, 1fr)'} w={'234px'}> {nums}</Grid>
 }
 
 function CountButton(props) {
-
-    const expressions = /\+|\-|\/|\*| /
-    const lastNumber = props.data[props.data.length - 1]
-
-    function checkExpressionType() {
-        if (expressions.test(lastNumber)) return
-        props.onClick(props.data + props.expression)
-
+    const checkInput = (lastCountSymbol) => {
+        if (!/\d/.test(lastCountSymbol)) return
+        if (props.data === '0') props.onClick(props.expression)
+        else props.onClick(props.data + props.expression)
     }
 
+    // const expressions = /\+|\-|\/|\*| /
+    // const lastNumber = props.data[props.data.length - 1]
+    //
+    // function checkExpressionType() {
+    //     if (expressions.test(lastNumber)) return
+    //     props.onClick(props.data + props.expression)
+    //
+    // }
+
     return (
-        <Button className="droppable" bg={'capri'} m={'4px'} w={'60px'} h={'60px'} onClick={() => {
-            checkExpressionType()
+        <Button className="droppable" size={'xl'} bg={'capri'} m={'4px'} onClick={() => {
+            checkInput(props.data.at(-1))
         }}>
 
             {props.expression}
@@ -44,49 +75,68 @@ const ClickCalc = (props) => {
 
     const [counts, setCounts] = useState('0')
     const [result, setResult] = useState('')
+    const [memory, setMemory] = useState([])
 
-    function applyExpression(countedNumber) {
-        setCounts(countedNumber)
-        setResult(eval(counts))
+    const dispatch = useDispatch()
+    const clear = () => {
+        setCounts('0')
+        setResult('')
+    }
+
+    const equalize = () => {
+        if (/😺/.test(counts)) {
+            setResult('Мяу');
+            return
+        }
+        if (/\+|\-|\*|\//.test(counts[0])) setResult(eval(result + counts))
+        else setResult(eval(counts))
+        setCounts('0')
     }
 
     return (
-        <Dragging result={result} setResult={setResult} setHistory={props.onClick}>
+        <Flex display={'flex'} flexDirection={'column'} justifyContent={'center'}
+              alignItems={'center'}>
+            <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} w={'90%'}>
+
+                <Dragging result={result} memory={memory} setResult={setResult} setMemory={setMemory}>
+
+                    <MemoryZone memory={memory}/>
 
 
-            <Flex w={'90%'} justifyContent='space-between' alignItems={'center'} bg={'gray.50'}
-                  borderRadius={'8px'}>
+                    <Text className={'test'} display={'flex'} justifyContent='flex-end' alignItems={'center'}
+                          w="100%" px={'16px'} h={'40px'} textColor={'tomato'} fontSize={'40px'} fontWeight={'bold'}>
+<span className={'draggable'}>
+    {result}
+</span>
+                    </Text>
 
+                    <Text display={'flex'} justifyContent='flex-end' alignItems={'center'}
+                          w="100%" textColor='tomato' px={'16px'} h={'40px'} fontSize={'20px'} fontWeight={'bold'}>
+                        {counts}
+                    </Text>
+                    <Button onClick={() => dispatch(updateHistory(result))}> Add to history</Button>
+                    <Flex justifyContent={'space-between'}>
+                        <Button w={'70px'} h={'70px'} m={'4px'} onClick={clear}>C</Button>
+                        <Button w={'70px'} h={'70px'} m={'4px'}></Button>
+                        <Button w={'70px'} h={'70px'} m={'4px'}>X</Button>
+                        <Button w={'70px'} h={'70px'} m={'4px'} bg={'tomato'} onClick={equalize}>~</Button>
+                    </Flex>
+                    <Flex>
+                        <Numbers data={counts} onClick={setCounts}/>
+                        <Flex flexDirection='column' justifyContent={"space-between"} alignItems={'center'}
+                              flexWrap={'wrap'}>
+                            <CountButton data={counts} expression={'+'} onClick={setCounts}/>
+                            <CountButton data={counts} expression={'-'} onClick={setCounts}/>
+                            <CountButton data={counts} expression={'*'} onClick={setCounts}/>
+                            <CountButton data={counts} expression={'/'} onClick={setCounts}/>
+                        </Flex>
+                    </Flex>
 
-                <Text display={'flex'} justifyContent='start' alignItems={'center'}
-                      w="fit-content" px={'16px'} h={'40px'}>
-                    {counts}
-                </Text>
+                </Dragging>
 
-                <Text display={'flex'} justifyContent='start' alignItems={'center'}
-                      w="fit-content" textColor='tomato' px={'16px'} h={'40px'}>
-                    {result}
-                </Text>
             </Flex>
-            <Flex w={'90%'}>
-                <Numbers data={counts} onClick={setCounts}/>
-                <Flex flexDirection='column'>
-                    <CountButton data={counts} expression={'+'} onClick={applyExpression}/>
-                    <CountButton data={counts} expression={'-'} onClick={applyExpression}/>
-                    <CountButton data={counts} expression={'*'} onClick={applyExpression}/>
-                    <CountButton data={counts} expression={'/'} onClick={applyExpression}/>
-                </Flex>
-                <Button bg={'tomato'} m={'4px'} w={'60px'} h={'60px'} onClick={() => {
-                    setResult(eval(counts))
-                    setCounts('0')
-                    props.onClick(counts)
-
-                }}
-                > =</Button>
-            </Flex>
-
-        </Dragging>
+        </Flex>
     );
-};
+}
 
 export default ClickCalc;

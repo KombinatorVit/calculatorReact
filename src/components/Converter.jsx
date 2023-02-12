@@ -2,18 +2,21 @@ import React, {useRef, useState} from "react";
 import {Box, Button, Flex, Input, List, Select, SlideFade, Text, useDisclosure} from "@chakra-ui/react";
 import getData from "../parser";
 import {HamburgerIcon} from "@chakra-ui/icons";
+import {useSelector, useDispatch} from 'react-redux';
+import {updateHistory, historyState} from '../historySlice';
 
 export function Converter() {
 
-
+    const history = useSelector(historyState)
+    const dispatch = useDispatch()
     const [mode, setMode] = useState('Distance')
 
     const [input, setInput] = useState(0)
     const [result, setResult] = useState(0)
     const first = useRef(null)
     const second = useRef(null)
-const data = ['Доллар США', 'Рубли']
-const dataDistance = ['Meters', 'Centimeters']
+    const data = ['Доллар США', 'Рубли']
+    const dataDistance = ['Meters', 'Centimeters']
 
     let converter;
 
@@ -79,7 +82,7 @@ const dataDistance = ['Meters', 'Centimeters']
 
     return (
         <Flex justifyContent={'center'} alignItems={'center'} flexDirection={'column'} gap={'10px'} w={'100px'}>
-            <Text>{result}</Text>
+            <Text>{history}</Text>
             {converter}
             <Input onChange={(e) => {
                 setInput(+e.currentTarget.value)
@@ -91,9 +94,8 @@ const dataDistance = ['Meters', 'Centimeters']
                     <option value={'Meters'}>Meters</option>
                 </Select>
             </Flex>
-            <Button onClick={() => {
-                convert()
-            }}>Convert</Button>
+            <Button onClick={() => dispatch(updateHistory(result))}>Add to history</Button>
+
 
             <Text>{result}</Text>
             <Input onChange={(e) => {

@@ -2,16 +2,18 @@ import './App.css';
 import {HamburgerIcon} from '@chakra-ui/icons'
 import {Button, Container, Flex, Input, List, ListItem, Select, Text, UnorderedList} from '@chakra-ui/react'
 import {SlideFade, useDisclosure} from '@chakra-ui/react'
+import { Routes, Route, Link } from 'react-router-dom'
 
 import Calculator from "./components/Calculator";
 import {Box} from "@chakra-ui/react";
 import React, {useRef, useState} from "react";
 import {Converter} from "./components/Converter";
+import {useSelector} from "react-redux";
+import {historyState} from "./historySlice";
 
 
+function MainMenu(props) {
 
-
-function Menu(props) {
     const {isOpen, onToggle} = useDisclosure()
 
     return (
@@ -42,6 +44,9 @@ function App() {
 
     const [mode, setMode] = useState('Calculator')
     let application;
+    const history = useSelector(historyState).map(e => {
+        return <Button>{e}</Button>
+    })
 
 
     switch (mode) {
@@ -59,10 +64,20 @@ function App() {
 
     return (
 
-        <Box h={'90vh'}>
-            <Menu onClick={setMode}/>
+        <Flex flexDirection={'column'} justifyContent={'space-between'} maxWidth={'400%'} w={'100%'} h={'90%'}>
+            <Flex gap={'10px'} color={'tomato'} >{history}</Flex>
+            <MainMenu setMode={setMode}/>
+
             {application}
-        </Box>
+
+            <Routes>
+
+                <Route path={'/'} element={<Calculator />} />
+                <Route path={'converter'} element={<Converter />} />
+                <Route path={'calculator'} element={<Calculator />} />
+
+            </Routes>
+        </Flex>
 
 
     );
