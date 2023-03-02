@@ -1,15 +1,15 @@
-В стеке у нас будет несколько технологий:
+# В стеке у нас будет несколько технологий
 
-React
+## React
 
-Chakra
+## Chakra
 
-Reack Hooks
+## Reack Hooks
 
-Express
+## Express
 
-Axios
+## Axios
 
-Cheerio
+## Cheerio
+## Redux
 
-Redux (под конец, чисто ради интереса)
